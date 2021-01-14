@@ -119,7 +119,7 @@ const OrderScreen = ({ match,history }) => {
 
                             {order.isDelivered ?
                                 <Message variant='success'>
-                                    Lisensi telah dikirimkan di email {order.shippingAddress.email} pada {order.deliveredAt}.
+                                    Tiket telah dikirimkan di email {order.shippingAddress.email} pada {order.deliveredAt}.
                                 </Message> :
                                 <Message variant='danger'>Belum Terkirim</Message> }
 

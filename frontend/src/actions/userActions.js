@@ -18,7 +18,6 @@ import {
     USER_LIST_REQUEST,
     USER_LIST_SUCCESS,
     USER_LIST_FAIL,
-    USER_LIST_RESET,
     USER_DELETE_SUCCESS,
     USER_DELETE_FAIL,
     USER_DELETE_REQUEST,
@@ -57,13 +56,49 @@ export const login = (email, password) => async  (dispatch) => {
     }
 }
 
-export const logout = () => (dispatch) => {
-    localStorage.removeItem('userInfo')
-    dispatch({ type: USER_LOGOUT})
-    dispatch({ type: USER_DETAILS_RESET})
-    dispatch({ type: ORDER_LIST_MY_RESET})
-    dispatch({ type: USER_LIST_RESET})
-}
+export const getGoogleUserInfo = () => {
+    return async (dispatch) => {
+        try {
+            dispatch({ type: USER_LOGIN_REQUEST });
+
+            const { data } = await axios.get('/api/auth/currentuser');
+
+            dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
+
+            localStorage.setItem('userInfo', JSON.stringify(data));
+        } catch (error) {
+            dispatch({
+                type: USER_LOGIN_FAIL,
+                payload:
+                    error.response && error.response.data.message
+                        ? error.response.data.message
+                        : error.message,
+            });
+        }
+    };
+};
+
+export const logout = () => {
+    return async (dispatch, getState) => {
+        try {
+            const {
+                userLogin: { userInfo },
+            } = getState();
+
+            if (userInfo.googleId) {
+                await axios.get('/api/auth/logout');
+            }
+
+            localStorage.removeItem('userInfo');
+            dispatch({ type: USER_LOGOUT });
+            dispatch({ type: ORDER_LIST_MY_RESET });
+            dispatch({ type: USER_DETAILS_RESET });
+            document.location.href = '/login';
+        } catch (err) {
+            console.error(err);
+        }
+    };
+};
 
 export const register = (name, email, password) => async  (dispatch) => {
     try{
@@ -218,7 +253,7 @@ export const deleteUser = (id) => async (dispatch, getState) => {
             },
         }
 
-         await axios.delete(`/api/users/${id}`, config)
+        await axios.delete(`/api/users/${id}`, config)
 
         dispatch({ type: USER_DELETE_SUCCESS })
     } catch (error) {
