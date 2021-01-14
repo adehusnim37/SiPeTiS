@@ -12,7 +12,7 @@ const Meta = ({title,description,keywords}) => {
 }
 
 Meta.defaultProps = {
-    title: 'Selamat Datang Di Perdana Sarjana',
+    title: 'Selamat Datang Di Sipetis',
     keywords: 'software,original software, murah',
     description: 'Menjual Software Original Dengan Murah'
 }
