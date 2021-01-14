@@ -5,7 +5,6 @@ import session from 'express-session';
 import generateToken from '../utils/generateToken.js';
 
 const router = express.Router();
-const sessions = session()
 
 // @desc Auth with Google
 // @route GET /auth/google

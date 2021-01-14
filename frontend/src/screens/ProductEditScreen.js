@@ -11,7 +11,6 @@ import {listProductDetails, updateProduct} from "../actions/productActions";
 import {PRODUCT_UPDATE_RESET} from "../constants/productConstant";
 import 'react-datepicker/dist/react-datepicker.css';
 
-
 const ProductEditScreen = ({ match, history }) => {
     const productId = match.params.id
 
@@ -20,8 +19,8 @@ const ProductEditScreen = ({ match, history }) => {
     const [image, setImage] = useState('')
     const [brand, setBrand] = useState('')
     const [category, setCategory] = useState('')
-    const [tanggalAwal, setTanggalAwal] = useState(new Date());
-    const [tanggalAkhir, setTanggalAkhir] = useState(new Date());
+    const [tanggalAwal, setTanggalAwal] = useState('');
+    const [tanggalAkhir, setTanggalAkhir] = useState('');
     const [countInStock, setCountInStock] = useState(0)
     const [description, setDescription] = useState('')
     const [uploading, setUploading] = useState(false)
@@ -39,7 +38,7 @@ const ProductEditScreen = ({ match, history }) => {
             dispatch({type: PRODUCT_UPDATE_RESET})
             history.push('/admin/productlist')
         }else {
-            if (product._id !== productId) {
+            if ( product._id !== productId) {
                 dispatch(listProductDetails(productId))
             } else {
                 setName(product.name)
@@ -62,9 +61,6 @@ const ProductEditScreen = ({ match, history }) => {
         formData.append('image', file)
         setUploading(true)
 
-        console.log('FormData>>');
-        console.log(formData);
-
         try {
             const config = {
                 headers: {
@@ -73,8 +69,7 @@ const ProductEditScreen = ({ match, history }) => {
             }
 
             const { data } = await axios.post('/api/upload', formData, config)
-            console.log('FormData>>');
-            console.log(formData);
+
             setImage(data)
             setUploading(false)
         } catch (error) {
@@ -100,8 +95,6 @@ const ProductEditScreen = ({ match, history }) => {
                 <h1>Edit Produk</h1>
                 {loadingUpdate && <Loader/>}
                 {errorUpdate && <Message variant='danger'>{errorUpdate}</Message>}
-                {loading && <Loader/>}
-                {error && <Message variant='danger'>{error}</Message> }
                 {loading ? <Loader/> : error ? <Message variant='danger'>{error}</Message> :(
                     <Form onSubmit={submitHandler}>
                         <Form.Group controlId={name}>
@@ -146,13 +139,13 @@ const ProductEditScreen = ({ match, history }) => {
                         <Form.Group controlId={tanggalAwal}>
                             <Form.Label> Tanggal Dimulai Acara </Form.Label>
                             <DatePicker selected={tanggalAwal} type='text' placeholder='Tanggal Acara Dimulai' value={tanggalAwal}
-                                          onChange={date => setTanggalAwal(date)}/>
+                                        onChange={e => setTanggalAwal(e.target.value)}/>
                         </Form.Group>
 
                         <Form.Group controlId={tanggalAkhir}>
                             <Form.Label> Tanggal Akhir Acara </Form.Label>
                             <DatePicker selected={tanggalAkhir} type='text' placeholder='Tanggal Acara Diakhiri' value={tanggalAkhir}
-                                        onChange={date => setTanggalAkhir(date)}/>
+                                        onChange={e => setTanggalAkhir(e.target.value)}/>
                         </Form.Group>
 
                         <Form.Group controlId={description}>

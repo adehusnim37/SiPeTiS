@@ -1,5 +1,6 @@
 import pkg from 'passport-google-oauth20';
 const { Strategy: GoogleStrategy } = pkg;
+import bcrypt from 'bcryptjs';
 import mongoose from 'mongoose';
 
 import User from '../models/userModel.js';
